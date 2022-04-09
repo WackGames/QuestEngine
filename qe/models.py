@@ -20,3 +20,18 @@ class Questions(models.Model):
         return self.question
 
 
+class Quizzes(models.Model):
+    user_id: models.TextField(blank=False),
+    name: models.TextField(blank=False),
+    img_url: models.TextField(blank=True),
+    category: models.TextField(blank=False),
+    subcategory: models.TextField(blank=True),
+    best_score: models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    current_score: models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
+    best_current = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
+    current_time: models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    time_limit: models.DecimalField(decimal_places=2, max_digits=8, blank=True)
+
+    def __str__(self):
+        return self.name
