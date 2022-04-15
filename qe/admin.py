@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Questions, Quizzes, Games
+from .models import Question, Quiz, Game
 
 # Register your models here.
 

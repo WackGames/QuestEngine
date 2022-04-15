@@ -4,21 +4,15 @@ from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
-class Question(models.Model):
-    quiz_id = models.ForeignKey(Quiz),
-    img_url = models.CharField(max_length=200, blank=True),
-    question = models.CharField(blank=False),
-    answer = ArrayField(models.CharField(), blank=False),
-    solution = ArrayField(models.CharField(), blank=False),
-    best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    tags = models.TextField(blank=False)
+class Game(models.Model):
+    name = models.TextField(blank=False),
+    description = models.TextField(blank=True),
+    img_url = models.TextField(blank=True),
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.question
-
+        return self.name
 
 class Quiz(models.Model):
     user_id = models.TextField(blank=False),
@@ -38,12 +32,17 @@ class Quiz(models.Model):
     def __str__(self):
         return self.name
 
-class Game(models.Model):
-    name = models.TextField(blank=False),
-    description = models.TextField(blank=True),
-    img_url = models.TextField(blank=True),
+class Question(models.Model):
+    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE),
+    img_url = models.CharField(max_length=200, blank=True),
+    question = models.CharField(blank=False),
+    answer = ArrayField(models.CharField(), blank=False),
+    solution = ArrayField(models.CharField(), blank=False),
+    best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    tags = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.question
