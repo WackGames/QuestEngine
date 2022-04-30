@@ -1,6 +1,6 @@
 
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 # Create your models here.
 
@@ -10,7 +10,7 @@ class Game(models.Model):
     img_url = models.CharField(max_length=400, blank=True),
     created_at = models.DateTimeField(auto_now_add=True),
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.TextField(blank=False)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.name
@@ -29,7 +29,7 @@ class Quiz(models.Model):
     updated_at = models.DateTimeField(auto_now=True),
     curr_score = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
     curr_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
-    tags = models.TextField(blank=False)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.name
@@ -44,7 +44,7 @@ class Question(models.Model):
     time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
     created_at = models.DateTimeField(auto_now_add=True),
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.TextField(blank=False)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.question
