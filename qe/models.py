@@ -1,48 +1,50 @@
 
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 # Create your models here.
 
 class Game(models.Model):
-    name = models.TextField(blank=False),
-    description = models.TextField(blank=True),
-    img_url = models.TextField(blank=True),
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=40, blank=False),
+    description = models.CharField(max_length=400, blank=True),
+    img_url = models.CharField(max_length=400, blank=True),
+    created_at = models.DateTimeField(auto_now_add=True),
     updated_at = models.DateTimeField(auto_now=True)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.name
 
 class Quiz(models.Model):
-    user_id = models.TextField(blank=False),
-    name = models.TextField(blank=False),
-    img_url = models.TextField(blank=True),
-    category = models.TextField(blank=False),
-    subcategory = models.TextField(blank=True),
+    user_id = models.CharField(max_length=40, blank=False),
+    name = models.CharField(max_length=40, blank=False),
+    description = models.CharField(max_length=400, blank=True),
+    img_url = models.CharField(max_length=400, blank=True),
+    category = models.CharField(max_length=40, blank=False),
+    subcategory = models.CharField(max_length=40, blank=True),
     best_score = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    current_score = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
-    best_current = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
-    current_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    created_at = models.DateTimeField(auto_now_add=True),
+    updated_at = models.DateTimeField(auto_now=True),
+    curr_score = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
+    curr_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.name
 
 class Question(models.Model):
     quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE),
-    img_url = models.CharField(max_length=200, blank=True),
-    question = models.CharField(blank=False),
+    img_url = models.CharField(max_length=400, blank=True),
+    question = models.TextField(blank=False),
     answer = ArrayField(models.CharField(), blank=False),
     solution = ArrayField(models.CharField(), blank=False),
     best_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
     time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True),
-    tags = models.TextField(blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True),
     updated_at = models.DateTimeField(auto_now=True)
+    tags = models.JSONField(blank=True)
 
     def __str__(self):
         return self.question
