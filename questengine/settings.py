@@ -140,7 +140,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'userid', 'quizid', 'search', 'order'
+    'userid', 'quizid', 'selected', 'search', 'order'
 ]
 
 django_heroku.settings(locals())
