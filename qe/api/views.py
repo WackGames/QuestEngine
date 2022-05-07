@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import pagination
 from rest_framework.generics import ListAPIView
 from django.http import HttpResponse
-from django.http import HttpRequest
+from django.http import HttpRequest, Http404
 
 from rest_framework import status
 from qe.models import Game, Quiz, Question
@@ -42,6 +42,27 @@ class ApiAllGamesView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     def get_queryset(self):
         return Game.objects.all().order_by(self.request.headers['order'])
+    def post(self, request):
+        serializer = GameSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSingleGameView(ListAPIView):
+    def get_object(self, pk):
+        try:
+            return Game.objects.get(pk=pk)
+        except Game.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        game = self.get_object(pk)
+        serializer = GameSerializer(game)
+        return Response(serializer.data)
 
 class ApiAllQuizzesView(ListAPIView):
     serializer_class = QuizSerializer
@@ -54,6 +75,27 @@ class ApiUserQuizView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     def get_queryset(self):
         return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(self.request.headers['order'])
+    def post(self, request):
+        serializer = QuizSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSingleQuizView(ListAPIView):
+    def get_object(self, pk):
+        try:
+            return Quiz.objects.get(pk=pk)
+        except Quiz.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        quiz = self.get_object(pk)
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
 
 class ApiAllQuestionsView(ListAPIView):
     serializer_class = QuestionSerializer
@@ -63,9 +105,32 @@ class ApiAllQuestionsView(ListAPIView):
 
 class ApiQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
-    pagination_class = StandardResultsSetPagination
     # print(HttpRequest, "this is a request")
-    # if request.headers['selected'] == True:
-    #     pagination_class = None
     def get_queryset(self):
+        if self.request.headers['selected'] == True:
+            pagination_class = None
+        else:
+            pagination_class = StandardResultsSetPagination
+
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+    def post(self, request):
+        serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSingleQuestionView(ListAPIView):
+    def get_object(self, pk):
+        try:
+            return Question.objects.get(pk=pk)
+        except Question.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        question = self.get_object(pk)
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
