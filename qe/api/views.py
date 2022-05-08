@@ -105,14 +105,28 @@ class ApiAllQuestionsView(ListAPIView):
 
 class ApiQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
-    # print(HttpRequest, "this is a request")
-    def get_queryset(self):
-        if self.request.headers['selected'] == True:
-            pagination_class = None
-        else:
-            pagination_class = StandardResultsSetPagination
+    pagination_class = StandardResultsSetPagination
 
+    def get_queryset(self):
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+
+    def post(self, request):
+        serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSelectedQuizQuestionView(ListAPIView):
+    serializer_class = QuestionSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+        
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
