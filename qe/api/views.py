@@ -64,6 +64,21 @@ class ApiSingleGameView(ListAPIView):
         serializer = GameSerializer(game)
         return Response(serializer.data)
 
+    def patch(self, request, pk):
+        game = self.get_object(pk)
+        serializer = GameSerializer(game, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        game = self.get_object(pk)
+        game.delete()
+        return Response({"message": "Game Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+
+
+
 class ApiAllQuizzesView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
@@ -96,6 +111,21 @@ class ApiSingleQuizView(ListAPIView):
         quiz = self.get_object(pk)
         serializer = QuizSerializer(quiz)
         return Response(serializer.data)
+
+    def patch(self, request, pk):
+        quiz = self.get_object(pk)
+        serializer = QuizSerializer(quiz, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
+
+    def delete(self, request, pk):
+        quiz = self.get_object(pk)
+        quiz.delete()
+        return Response({"message": "Quiz Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+
+
 
 class ApiAllQuestionsView(ListAPIView):
     serializer_class = QuestionSerializer
@@ -148,3 +178,17 @@ class ApiSingleQuestionView(ListAPIView):
         question = self.get_object(pk)
         serializer = QuestionSerializer(question)
         return Response(serializer.data)
+
+    def patch(self, request, pk):
+        question = self.get_object(pk)
+        serializer = QuestionSerializer(question, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        question = self.get_object(pk)
+        question.delete()
+        return Response({"message": "Question Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+
