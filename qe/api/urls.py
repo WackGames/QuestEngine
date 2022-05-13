@@ -1,7 +1,7 @@
 from django.urls import path
 from qe.api.views import (working_api, ApiSingleGameView, ApiAllGamesView, ApiAllQuizzesView, ApiSingleQuizView, ApiUserQuizView, ApiAllQuestionsView, ApiSingleQuestionView, ApiQuizQuestionView, ApiSelectedQuizQuestionView)
 
-app_name = 'EM'
+app_name = 'QE'
 urlpatterns = [
         path(f'', working_api, name='working'),
         path(f'game/', ApiAllGamesView.as_view(), name='all_games_api'),
