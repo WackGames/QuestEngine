@@ -110,13 +110,48 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "authen.User"
 
+
 DJOSER = {
+    # 'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'EMAIL': {
+        # 'activation': 'djoser.email.ActivationEmail',
+        'confirmation': 'djoser.email.ConfirmationEmail',
+        'password_reset': 'djoser.email.PasswordResetEmail',
+        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+        'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
+        'username_reset': 'djoser.email.UsernameResetEmail',
+    },
+    'HIDE_USERS': True,
     'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    # 'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    # 'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    # 'PASSWORD_RESET_CONFIRM_URL': True,
+    # 'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    # 'SEND_ACTIVATION_EMAIL': True,
+    # 'SEND_CONFIRMATION_EMAIL': True,
     'SERIALIZERS': {
+        # 'activation': 'djoser.serializers.ActivationSerializer',
+        'current_user': 'authen.api.serializers.UserCreateSerializer',
+        # 'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        # 'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        # 'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
+        'set_password': 'djoser.serializers.SetPasswordSerializer',
+        'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
+        'set_username': 'djoser.serializers.SetUsernameSerializer',
+        'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
+        'user': 'authen.api.serializers.UserCreateSerializer',
         'user_create': 'authen.api.serializers.UserCreateSerializer',
-        'user': 'authen.api.serializers.UserCreateSerializer'
-    }
+        'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    'SET_PASSWORD_RETYPE': True,
+    'SET_USERNAME_RETYPE': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    # 'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    # 'USERNAME_RESET_CONFIRM_RETYPE': True,
+    # 'USERNAME_RESET_CONFIRM_URL': True,
+    # 'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True
 }
 
 # Password validation
