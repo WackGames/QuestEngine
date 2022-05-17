@@ -1,5 +1,7 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import pagination
 from rest_framework.generics import ListAPIView
@@ -37,9 +39,11 @@ class StandardResultsSetPagination(PageNumberPagination):
 def working_api(request):
     return Response({"message": "Quest Engine api is working"})
 
+# @permission_classes([IsAuthenticated])
 class ApiAllGamesView(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Game.objects.all().order_by(self.request.headers['order'])
     def post(self, request):
@@ -53,6 +57,7 @@ class ApiAllGamesView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleGameView(ListAPIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
             return Game.objects.get(pk=pk)
@@ -82,12 +87,14 @@ class ApiSingleGameView(ListAPIView):
 class ApiAllQuizzesView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get_queryset(self):
         return Quiz.objects.all().order_by(self.request.headers['order'])
 
 class ApiUserQuizView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(self.request.headers['order'])
     def post(self, request):
@@ -101,6 +108,7 @@ class ApiUserQuizView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleQuizView(ListAPIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
             return Quiz.objects.get(pk=pk)
@@ -130,13 +138,14 @@ class ApiSingleQuizView(ListAPIView):
 class ApiAllQuestionsView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get_queryset(self):
         return Question.objects.all().order_by(self.request.headers['order'])
 
 class ApiQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
-
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
 
@@ -153,7 +162,7 @@ class ApiQuizQuestionView(ListAPIView):
 class ApiSelectedQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = None
-
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
         
@@ -168,6 +177,7 @@ class ApiSelectedQuizQuestionView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleQuestionView(ListAPIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
             return Question.objects.get(pk=pk)
