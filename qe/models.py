@@ -9,7 +9,7 @@ class Game(models.Model):
     img_url = models.CharField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.JSONField(blank=True, default=dict)
+    tags = JSONField(blank=True, default=dict)
 
     def __str__(self):
         return self.name
@@ -28,7 +28,7 @@ class Quiz(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     curr_score = models.DecimalField(decimal_places=2, max_digits=8, blank=True, default=0)
     curr_time = models.DecimalField(decimal_places=2, max_digits=8, blank=True, default=0)
-    tags = models.JSONField(blank=True, default=dict)
+    tags = JSONField(blank=True, default=dict)
 
     def __str__(self):
         return self.name
@@ -43,7 +43,7 @@ class Question(models.Model):
     time_limit = models.DecimalField(decimal_places=2, max_digits=8, blank=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.JSONField(blank=True, default=dict)
+    tags = JSONField(blank=True, default=dict)
 
     def __str__(self):
         return self.question
