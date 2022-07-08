@@ -14,6 +14,7 @@ import os
 import django_heroku
 from corsheaders.defaults import default_headers
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = str(Path(__file__).resolve().parent.parent)
@@ -42,12 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'qe.apps.QeConfig',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'authen.apps.AuthenConfig',
-    'djoser'
+    'djoser',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -107,14 +111,18 @@ DATABASES['default'].update(db_from_env)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSIONS_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
 
     )
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT', ),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
 AUTH_USER_MODEL = "authen.User"
@@ -134,7 +142,6 @@ DJOSER = {
     },
     'HIDE_USERS': True,
     'LOGIN_FIELD': 'email',
-    'LOGOUT_ON_PASSWORD_CHANGE': True,
     # 'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_URL': 'passreset/{uid}/{token}',
@@ -213,8 +220,17 @@ STATICFILES_DIRS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'userid', 'quizid', 'selected', 'search', 'order'
+    'userid', 'quizid', 'selected', 'search', 'order', 'Authorization'
 ]
 
 django_heroku.settings(locals())
