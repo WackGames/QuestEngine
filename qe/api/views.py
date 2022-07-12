@@ -9,8 +9,8 @@ from django.http import HttpResponse
 from django.http import HttpRequest, Http404
 
 from rest_framework import status
-from qe.models import Game, Quiz, Question
-from qe.api.serializers import GameSerializer, QuizSerializer, QuestionSerializer
+from qe.models import Game, Quiz, DemoQuiz, Question, DemoQuestion
+from qe.api.serializers import GameSerializer, QuizSerializer, DemoQuizSerializer, QuestionSerializer, DemoQuestionSerializer
 from django.core.paginator import Paginator
 import json
 import django.contrib.postgres
@@ -34,6 +34,16 @@ class StandardResultsSetPagination(PageNumberPagination):
             'results': data
         })
 
+class NoPagination(PageNumberPagination):
+    page_size = 500
+    page_size_query_param = 'page_size'
+
+    def get_paginated_response(self, data):
+        return Response({
+            'count': self.page.paginator.count,
+            'results': data
+        })
+
 
 @api_view(['GET'])
 def working_api(request):
@@ -43,7 +53,6 @@ def working_api(request):
 class ApiAllGamesView(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = StandardResultsSetPagination
-    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Game.objects.all().order_by(self.request.headers['order'])
     def post(self, request):
@@ -57,7 +66,6 @@ class ApiAllGamesView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleGameView(ListAPIView):
-    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
             return Game.objects.get(pk=pk)
@@ -161,20 +169,10 @@ class ApiQuizQuestionView(ListAPIView):
 
 class ApiSelectedQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
-    pagination_class = None
+    pagination_class = NoPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
-        
-    def post(self, request):
-        serializer = QuestionSerializer(data=request.data)
-        if serializer.is_valid():
-            print(serializer, 'is valid')
-            serializer.save()
-        else:
-            print('it isnt valid!', serializer.errors)
-            return Response(serializer.errors)
-        return Response(serializer.data)
 
 class ApiSingleQuestionView(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -202,3 +200,93 @@ class ApiSingleQuestionView(ListAPIView):
         question.delete()
         return Response({"message": "Question Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
 
+
+
+class ApiAllDemoQuizzesView(ListAPIView):
+    serializer_class = DemoQuizSerializer
+    pagination_class = StandardResultsSetPagination
+    def get_queryset(self):
+        return DemoQuiz.objects.all().order_by(self.request.headers['order'])
+
+    def post(self, request):
+        serializer = DemoQuizSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSingleDemoQuizView(ListAPIView):
+    def get_object(self, pk):
+        try:
+            return DemoQuiz.objects.get(pk=pk)
+        except DemoQuiz.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        quiz = self.get_object(pk)
+        serializer = DemoQuizSerializer(quiz)
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        quiz = self.get_object(pk)
+        serializer = DemoQuizSerializer(quiz, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        quiz = self.get_object(pk)
+        quiz.delete()
+        return Response({"message": "Demo Quiz Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ApiAllDemoQuestionsView(ListAPIView):
+    serializer_class = DemoQuestionSerializer
+    pagination_class = StandardResultsSetPagination
+    def get_queryset(self):
+        return DemoQuestion.objects.all().order_by(self.request.headers['order'])
+
+class ApiAllDemoQuizQuestionsView(ListAPIView):
+    serializer_class = DemoQuestionSerializer
+    pagination_class = NoPagination
+    def get_queryset(self):
+        return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+        
+    def post(self, request):
+        serializer = DemoQuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer, 'is valid')
+            serializer.save()
+        else:
+            print('it isnt valid!', serializer.errors)
+            return Response(serializer.errors)
+        return Response(serializer.data)
+
+class ApiSingleDemoQuizQuestionView(ListAPIView):
+    def get_object(self, pk):
+        try:
+            return DemoQuestion.objects.get(pk=pk)
+        except DemoQuestion.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        question = self.get_object(pk)
+        serializer = DemoQuestionSerializer(question)
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        question = self.get_object(pk)
+        serializer = DemoQuestionSerializer(question, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        question = self.get_object(pk)
+        question.delete()
+        return Response({"message": "Demo Question Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
