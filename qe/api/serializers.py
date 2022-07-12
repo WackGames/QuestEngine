@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from qe.models import Game, Quiz, Question
+from qe.models import Game, Quiz, Question, DemoQuiz, DemoQuestion
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +12,17 @@ class QuizSerializer(serializers.ModelSerializer):
         model = Quiz
         fields = ('__all__')
 
+class DemoQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DemoQuiz
+        fields = ('__all__')
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
+        fields = ('__all__')
+
+class DemoQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DemoQuestion
         fields = ('__all__')
