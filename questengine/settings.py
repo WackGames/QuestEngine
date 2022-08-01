@@ -126,13 +126,13 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT', ),
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
 AUTH_USER_MODEL = "authen.User"
 
-DOMAIN = 'localhost:3000'
+DOMAIN = 'quest-engine.vercel.app'
 SITE_NAME = 'Quest Engine' #Example
 
 DJOSER = {
@@ -141,7 +141,7 @@ DJOSER = {
         # 'activation': 'djoser.email.ActivationEmail',
         # 'confirmation': 'djoser.email.ConfirmationEmail',
         'password_reset': 'djoser.email.PasswordResetEmail',
-        'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+        # 'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
         # 'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
         # 'username_reset': 'djoser.email.UsernameResetEmail',
     },
