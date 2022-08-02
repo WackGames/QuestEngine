@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-)*enh8tih)^e)&z=ws$^%=&=3#@d73xm=&byzwva_b4^45wbm8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'questengine.herokuapp.com']
 
 
 # Application definition
