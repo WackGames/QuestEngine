@@ -53,8 +53,9 @@ def working_api(request):
 class ApiAllGamesView(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = StandardResultsSetPagination
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Game.objects.all().order_by(self.request.headers['order'])
+        return Game.objects.all().order_by(order_cat)
     def post(self, request):
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
@@ -96,15 +97,17 @@ class ApiAllQuizzesView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Quiz.objects.all().order_by(self.request.headers['order'])
+        return Quiz.objects.all().order_by(order_cat)
 
 class ApiUserQuizView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(self.request.headers['order'])
+        return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
     def post(self, request):
         serializer = QuizSerializer(data=request.data)
         if serializer.is_valid():
@@ -147,15 +150,17 @@ class ApiAllQuestionsView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Question.objects.all().order_by(self.request.headers['order'])
+        return Question.objects.all().order_by(order_cat)
 
 class ApiQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
@@ -171,8 +176,9 @@ class ApiSelectedQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = NoPagination
     permission_classes = [IsAuthenticated]
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
 class ApiSingleQuestionView(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -205,8 +211,9 @@ class ApiSingleQuestionView(ListAPIView):
 class ApiAllDemoQuizzesView(ListAPIView):
     serializer_class = DemoQuizSerializer
     pagination_class = StandardResultsSetPagination
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return DemoQuiz.objects.all().order_by(self.request.headers['order'])
+        return DemoQuiz.objects.all().order_by(order_cat)
 
     def post(self, request):
         serializer = DemoQuizSerializer(data=request.data)
@@ -247,8 +254,9 @@ class ApiSingleDemoQuizView(ListAPIView):
 class ApiAllDemoQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = StandardResultsSetPagination
+    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
-        return DemoQuestion.objects.all().order_by(self.request.headers['order'])
+        return DemoQuestion.objects.all().order_by(order_cat)
 
 class ApiAllDemoQuizQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
