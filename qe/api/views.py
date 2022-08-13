@@ -54,7 +54,10 @@ class ApiAllGamesView(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = StandardResultsSetPagination
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Game.objects.all().order_by(order_cat)
     def post(self, request):
         serializer = GameSerializer(data=request.data)
@@ -98,7 +101,10 @@ class ApiAllQuizzesView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Quiz.objects.all().order_by(order_cat)
 
 class ApiUserQuizView(ListAPIView):
@@ -106,7 +112,10 @@ class ApiUserQuizView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
     def post(self, request):
         serializer = QuizSerializer(data=request.data)
@@ -151,7 +160,10 @@ class ApiAllQuestionsView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Question.objects.all().order_by(order_cat)
 
 class ApiQuizQuestionView(ListAPIView):
@@ -159,7 +171,10 @@ class ApiQuizQuestionView(ListAPIView):
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
     def post(self, request):
@@ -177,7 +192,10 @@ class ApiSelectedQuizQuestionView(ListAPIView):
     pagination_class = NoPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
 class ApiSingleQuestionView(ListAPIView):
@@ -212,7 +230,10 @@ class ApiAllDemoQuizzesView(ListAPIView):
     serializer_class = DemoQuizSerializer
     pagination_class = StandardResultsSetPagination
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return DemoQuiz.objects.all().order_by(order_cat)
 
     def post(self, request):
@@ -255,14 +276,20 @@ class ApiAllDemoQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = StandardResultsSetPagination
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return DemoQuestion.objects.all().order_by(order_cat)
 
 class ApiAllDemoQuizQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = NoPagination
     def get_queryset(self):
-        order_cat = self.request.headers['order'] or "id"
+        try:
+            order_cat = self.request.headers['order']
+        except:
+            order_cat = "id"
         return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
         
     def post(self, request):
