@@ -53,8 +53,8 @@ def working_api(request):
 class ApiAllGamesView(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = StandardResultsSetPagination
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Game.objects.all().order_by(order_cat)
     def post(self, request):
         serializer = GameSerializer(data=request.data)
@@ -97,16 +97,16 @@ class ApiAllQuizzesView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Quiz.objects.all().order_by(order_cat)
 
 class ApiUserQuizView(ListAPIView):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
     def post(self, request):
         serializer = QuizSerializer(data=request.data)
@@ -150,16 +150,16 @@ class ApiAllQuestionsView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsAdminUser]
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Question.objects.all().order_by(order_cat)
 
 class ApiQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
     def post(self, request):
@@ -176,8 +176,8 @@ class ApiSelectedQuizQuestionView(ListAPIView):
     serializer_class = QuestionSerializer
     pagination_class = NoPagination
     permission_classes = [IsAuthenticated]
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
 
 class ApiSingleQuestionView(ListAPIView):
@@ -211,8 +211,8 @@ class ApiSingleQuestionView(ListAPIView):
 class ApiAllDemoQuizzesView(ListAPIView):
     serializer_class = DemoQuizSerializer
     pagination_class = StandardResultsSetPagination
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return DemoQuiz.objects.all().order_by(order_cat)
 
     def post(self, request):
@@ -254,15 +254,16 @@ class ApiSingleDemoQuizView(ListAPIView):
 class ApiAllDemoQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = StandardResultsSetPagination
-    order_cat = self.request.headers['order'] or "id"
     def get_queryset(self):
+        order_cat = self.request.headers['order'] or "id"
         return DemoQuestion.objects.all().order_by(order_cat)
 
 class ApiAllDemoQuizQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = NoPagination
     def get_queryset(self):
-        return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(self.request.headers['order'])
+        order_cat = self.request.headers['order'] or "id"
+        return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
         
     def post(self, request):
         serializer = DemoQuestionSerializer(data=request.data)
