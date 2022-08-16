@@ -452,6 +452,7 @@ class ApiAllDemoQuizzesView(ListAPIView):
         return DemoQuiz.objects.all().order_by(order_cat)
 
     def post(self, request):
+        permission_classes = [IsAdminUser]
         serializer = DemoQuizSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer, 'is valid')
@@ -462,6 +463,7 @@ class ApiAllDemoQuizzesView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleDemoQuizView(ListAPIView):
+    permission_classes = [IsAdminUser]
     def get_object(self, pk):
         try:
             return DemoQuiz.objects.get(pk=pk)
@@ -490,6 +492,7 @@ class ApiSingleDemoQuizView(ListAPIView):
 class ApiAllDemoQuestionsView(ListAPIView):
     serializer_class = DemoQuestionSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [IsAdminUser]
     def get_queryset(self):
         try:
             order_cat = self.request.headers['order']
@@ -508,6 +511,7 @@ class ApiAllDemoQuizQuestionsView(ListAPIView):
         return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
         
     def post(self, request):
+        permission_classes = [IsAdminUser]
         serializer = DemoQuestionSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer, 'is valid')
@@ -518,6 +522,7 @@ class ApiAllDemoQuizQuestionsView(ListAPIView):
         return Response(serializer.data)
 
 class ApiSingleDemoQuizQuestionView(ListAPIView):
+    permission_classes = [IsAdminUser]
     def get_object(self, pk):
         try:
             return DemoQuestion.objects.get(pk=pk)
