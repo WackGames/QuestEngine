@@ -451,16 +451,15 @@ class ApiAllDemoQuizzesView(ListAPIView):
             order_cat = "id"
         return DemoQuiz.objects.all().order_by(order_cat)
 
-    def post(self, request):
-        permission_classes = [IsAdminUser]
-        serializer = DemoQuizSerializer(data=request.data)
-        if serializer.is_valid():
-            print(serializer, 'is valid')
-            serializer.save()
-        else:
-            print('it isnt valid!', serializer.errors)
-            return Response(serializer.errors)
-        return Response(serializer.data)
+    # def post(self, request):
+    #     serializer = DemoQuizSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         print(serializer, 'is valid')
+    #         serializer.save()
+    #     else:
+    #         print('it isnt valid!', serializer.errors)
+    #         return Response(serializer.errors)
+    #     return Response(serializer.data)
 
 class ApiSingleDemoQuizView(ListAPIView):
     permission_classes = [IsAdminUser]
@@ -510,16 +509,15 @@ class ApiAllDemoQuizQuestionsView(ListAPIView):
             order_cat = "id"
         return DemoQuestion.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
         
-    def post(self, request):
-        permission_classes = [IsAdminUser]
-        serializer = DemoQuestionSerializer(data=request.data)
-        if serializer.is_valid():
-            print(serializer, 'is valid')
-            serializer.save()
-        else:
-            print('it isnt valid!', serializer.errors)
-            return Response(serializer.errors)
-        return Response(serializer.data)
+    # def post(self, request):
+    #     serializer = DemoQuestionSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         print(serializer, 'is valid')
+    #         serializer.save()
+    #     else:
+    #         print('it isnt valid!', serializer.errors)
+    #         return Response(serializer.errors)
+    #     return Response(serializer.data)
 
 class ApiSingleDemoQuizQuestionView(ListAPIView):
     permission_classes = [IsAdminUser]
