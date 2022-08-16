@@ -47,7 +47,222 @@ class NoPagination(PageNumberPagination):
 
 @api_view(['GET'])
 def working_api(request):
-    return Response({"message": "Quest Engine api is working"})
+    return Response(
+        {
+            "message": "Quest Engine api is working",
+            "endpoints": {
+                "/authen/users/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the app's users or single user depending on permissions."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to register with the app."
+                    }
+                ],
+                "/authen/users/me/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab the logged in user."
+                    },
+                    {
+                    "operation": "PUT",
+                    "description": "This will allow a user to edit user information except email and password. Username is required."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete their account. Password is required."
+                    }
+                ],
+                "/authen/users/set_password/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to set a new password."
+                    }
+                ],
+                "/authen/users/set_email/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to set a new email."
+                    }
+                ],
+                "/authen/jwt/create/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to log into the app."
+                    }
+                ],
+                "/authen/jwt/refresh/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to get a new valid access token. A refresh token is required."
+                    }
+                ],
+                "/authen/jwt/verify/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to check if a given token is valid. A token is required."
+                    }
+                ],
+                "/authen/users/reset_password/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow an email to be sent to a user who lost their password."
+                    }
+                ],
+                "/authen/users/reset_password_confirm/": [
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to create a new password if they forgot their old one."
+                    }
+                ],
+                "/game/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the basic game data."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to add a game."
+                    }
+                ],
+                "/game/<id>/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab a single game and its data."
+                    },
+                    {
+                    "operation": "PATCH",
+                    "description": "This will allow a user to edit a game."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete a game."
+                    }
+                ],
+                "/quiz/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the app's quizzes from every user. Being logged in is required. Being a super admin is required."
+                    }
+                ],
+                "/user-quiz/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the user's quizzes. Being logged in is required. A user id is required."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to add another quiz. Being logged in is required. A user id is required."
+                    }
+                ],
+                "/user-quiz/<id>": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab a single quiz and its data. Being logged in is required."
+                    },
+                    {
+                    "operation": "PATCH",
+                    "description": "This will allow a user to edit a quiz. Being logged in is required."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete a quiz. Being logged in is required."
+                    }
+                ],
+                "/demo-quiz/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the demo quizzes."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to add a demo quiz."
+                    }
+                ],
+                "/demo-quiz/<id>/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab a single demo quiz."
+                    },
+                    {
+                    "operation": "PATCH",
+                    "description": "This will allow a user to edit a demo quiz."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete a demo quiz."
+                    }
+                ],
+                "/question/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the app's quiz questions from all users. Being a super admin is required."
+                    }
+                ],
+                "/demo-question/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the app's demo quiz questions from every quiz."
+                    }
+                ],
+                "/demo-quiz-question/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of the app's demo quiz questions from a single quiz. A quiz id is required."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to add a demo quiz question."
+                    }
+                ],
+                "/demo-quiz-question/<id>/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab a single demo quiz question."
+                    },
+                    {
+                    "operation": "PATCH",
+                    "description": "This will allow a user to edit a demo quiz question."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete a demo quiz question."
+                    }
+                ],
+                "/quiz-question/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of a user's quiz questions from a single quiz WITH pagination. Being logged in is required. A quiz id is also required."
+                    },
+                    {
+                    "operation": "POST",
+                    "description": "This will allow a user to add a quiz question. Being logged in is required."
+                    }
+                ],
+                "/quiz-question/<id>/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab a single question from a user's quiz. Being logged in is required."
+                    },
+                    {
+                    "operation": "PATCH",
+                    "description": "This will allow a user to edit a quiz question. Being logged in is required."
+                    },
+                    {
+                    "operation": "DELETE",
+                    "description": "This will allow a user to delete a quiz question. Being logged in is required."
+                    }
+                ],
+                "/selected-quiz-question/": [
+                    {
+                    "operation": "GET",
+                    "description": "This will grab all of a user's quiz questions from a single quiz WITHOUT pagination. Being logged in is required. A quiz id is also required."
+                    }
+                ]                           
+            }
+    })
 
 # @permission_classes([IsAuthenticated])
 class ApiAllGamesView(ListAPIView):
