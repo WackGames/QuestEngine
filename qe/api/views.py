@@ -17,7 +17,7 @@ import django.contrib.postgres
 from django.core.management.utils import get_random_secret_key
 
 import os
-
+import requests
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 16
     page_size_query_param = 'page_size'
@@ -346,28 +346,46 @@ class ApiSingleQuizView(ListAPIView):
     permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
-            return Quiz.objects.get(pk=pk)
+            token = self.request.headers['Authorization']
+            headers = {'Authorization': token}
+            user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+            user_data = user_data.json()["id"]
+            quiz_data = Quiz.objects.get(pk=pk).user_id
+            owner = user_data == int(quiz_data)
+            print(user_data, quiz_data)
+            if owner:
+                return Quiz.objects.get(pk=pk)
+            else:
+                return "None"
         except Quiz.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
-        quiz = self.get_object(pk)
-        serializer = QuizSerializer(quiz)
-        return Response(serializer.data)
+        try:
+            quiz = self.get_object(pk)
+            serializer = QuizSerializer(quiz)
+            return Response(serializer.data)
+        except:
+            return Response({"message": "You do not own this quiz!"})
 
     def patch(self, request, pk):
-        quiz = self.get_object(pk)
-        serializer = QuizSerializer(quiz, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
+        try:
+            quiz = self.get_object(pk)
+            serializer = QuizSerializer(quiz, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
+        except:
+            return Response({"message": "You do not own this quiz!"})
 
     def delete(self, request, pk):
-        quiz = self.get_object(pk)
-        quiz.delete()
-        return Response({"message": "Quiz Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
-
+        try:
+            quiz = self.get_object(pk)
+            quiz.delete()
+            return Response({"message": "Quiz Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response({"message": "You do not own this quiz!"})
 
 
 class ApiAllQuestionsView(ListAPIView):
