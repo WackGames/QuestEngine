@@ -340,10 +340,8 @@ class ApiUserQuizView(ListAPIView):
         print(user_data, quiz_data)
         owner = user_data == int(quiz_data)
         if owner:
-            print("return results!")
             return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
         else:
-            print("return none!")
             return Quiz.objects.none()
             
     def post(self, request):
@@ -442,10 +440,8 @@ class ApiQuizQuestionView(ListAPIView):
             return Quiz.objects.none()
         owner = user_data == int(question_data)
         if owner:
-            print("return results!")
             return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
         else:
-            print("return none!")
             return Quiz.objects.none()
 
     def post(self, request):
