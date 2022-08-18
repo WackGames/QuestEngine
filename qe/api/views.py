@@ -331,8 +331,30 @@ class ApiUserQuizView(ListAPIView):
             order_cat = self.request.headers['order']
         except:
             order_cat = "id"
-        return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
+
+        token = self.request.headers['Authorization']
+        headers = {'Authorization': token}
+        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = user_data.json()["id"]
+        quiz_data = self.request.headers['userid']
+        print(user_data, quiz_data)
+        owner = user_data == int(quiz_data)
+        if owner:
+            return Quiz.objects.filter(user_id=self.request.headers['userid']).order_by(order_cat)
+        else:
+            return Quiz.objects.none()
+            
     def post(self, request):
+        token = self.request.headers['Authorization']
+        headers = {'Authorization': token}
+        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = user_data.json()["id"]
+        quiz_data = request.data["user_id"]
+        owner = user_data == int(quiz_data)
+
+        if not owner:
+            return Response({"message": "You do not own this user id!"})
+        
         serializer = QuizSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer, 'is valid')
@@ -408,9 +430,31 @@ class ApiQuizQuestionView(ListAPIView):
             order_cat = self.request.headers['order']
         except:
             order_cat = "id"
-        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
+        token = self.request.headers['Authorization']
+        headers = {'Authorization': token}
+        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = user_data.json()["id"]
+        try:
+            question_data = Question.objects.filter(quiz_id=self.request.headers['quizid'])[0].user_id
+        except:
+            return Quiz.objects.none()
+        owner = user_data == int(question_data)
+        if owner:
+            return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
+        else:
+            return Quiz.objects.none()
 
     def post(self, request):
+        token = self.request.headers['Authorization']
+        headers = {'Authorization': token}
+        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = user_data.json()["id"]
+        quiz_data = request.data["user_id"]
+        owner = user_data == int(quiz_data)
+
+        if not owner:
+            return Response({"message": "You do not own this user id!"})
+
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer, 'is valid')
@@ -429,34 +473,65 @@ class ApiSelectedQuizQuestionView(ListAPIView):
             order_cat = self.request.headers['order']
         except:
             order_cat = "id"
-        return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
-
+        token = self.request.headers['Authorization']
+        headers = {'Authorization': token}
+        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = user_data.json()["id"]
+        question_data = Question.objects.filter(quiz_id=self.request.headers['quizid'])[0].user_id
+        print(user_data, question_data)
+        owner = user_data == int(question_data)
+        if owner:
+            print("return results!")
+            return Question.objects.filter(quiz_id=self.request.headers['quizid']).order_by(order_cat)
+        else:
+            print("return none!")
+            return Quiz.objects.none()
+            
 class ApiSingleQuestionView(ListAPIView):
     permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
-            return Question.objects.get(pk=pk)
+            token = self.request.headers['Authorization']
+            headers = {'Authorization': token}
+            user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+            user_data = user_data.json()["id"]
+            question_data = Question.objects.get(pk=pk).user_id
+            owner = user_data == int(question_data)
+            print(user_data, question_data)
+            if owner:
+                return Question.objects.get(pk=pk)
+            else:
+                return "None"
         except Question.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
-        question = self.get_object(pk)
-        serializer = QuestionSerializer(question)
-        return Response(serializer.data)
+        try:
+            question = self.get_object(pk)
+            serializer = QuestionSerializer(question)
+            return Response(serializer.data)
+        except:
+            return Response({"message": "You do not own this question!"})
 
     def patch(self, request, pk):
-        question = self.get_object(pk)
-        serializer = QuestionSerializer(question, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            question = self.get_object(pk)
+            serializer = QuestionSerializer(question, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"message": "You do not own this question!"})
 
     def delete(self, request, pk):
-        question = self.get_object(pk)
-        question.delete()
-        return Response({"message": "Question Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
-
+        try:
+            question = self.get_object(pk)
+            question.delete()
+            return Response({"message": "Question Deleted Successfully!"}, status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response({"message": "You do not own this question!"})
+ 
 
 
 class ApiAllDemoQuizzesView(ListAPIView):
