@@ -15,7 +15,7 @@ class Game(models.Model):
         return self.name
 
 class Quiz(models.Model):
-    user_id = models.CharField(max_length=40, blank=False)
+    user_id = models.IntegerField(blank=False)
     name = models.CharField(max_length=40, blank=False)
     description = models.CharField(max_length=400, blank=True)
     img_url = models.CharField(max_length=400, blank=True)
@@ -35,6 +35,7 @@ class Quiz(models.Model):
 
 class Question(models.Model):
     quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE,)
+    user_id = models.IntegerField(blank=False)
     img_url = models.CharField(max_length=400, blank=True)
     question = models.TextField(blank=False)
     answer = ArrayField(JSONField(blank=False, default=dict))
