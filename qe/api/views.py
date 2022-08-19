@@ -334,7 +334,7 @@ class ApiUserQuizView(ListAPIView):
 
         token = self.request.headers['Authorization']
         headers = {'Authorization': token}
-        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
         user_data = user_data.json()["id"]
         quiz_data = self.request.headers['userid']
         print(user_data, quiz_data)
@@ -347,7 +347,7 @@ class ApiUserQuizView(ListAPIView):
     def post(self, request):
         token = self.request.headers['Authorization']
         headers = {'Authorization': token}
-        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
         user_data = user_data.json()["id"]
         quiz_data = request.data["user_id"]
         owner = user_data == int(quiz_data)
@@ -370,7 +370,7 @@ class ApiSingleQuizView(ListAPIView):
         try:
             token = self.request.headers['Authorization']
             headers = {'Authorization': token}
-            user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+            user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
             user_data = user_data.json()["id"]
             quiz_data = Quiz.objects.get(pk=pk).user_id
             owner = user_data == int(quiz_data)
@@ -432,7 +432,7 @@ class ApiQuizQuestionView(ListAPIView):
             order_cat = "id"
         token = self.request.headers['Authorization']
         headers = {'Authorization': token}
-        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
         user_data = user_data.json()["id"]
         try:
             question_data = Question.objects.filter(quiz_id=self.request.headers['quizid'])[0].user_id
@@ -447,7 +447,7 @@ class ApiQuizQuestionView(ListAPIView):
     def post(self, request):
         token = self.request.headers['Authorization']
         headers = {'Authorization': token}
-        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
         user_data = user_data.json()["id"]
         quiz_data = request.data["user_id"]
         owner = user_data == int(quiz_data)
@@ -475,7 +475,7 @@ class ApiSelectedQuizQuestionView(ListAPIView):
             order_cat = "id"
         token = self.request.headers['Authorization']
         headers = {'Authorization': token}
-        user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+        user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
         user_data = user_data.json()["id"]
         question_data = Question.objects.filter(quiz_id=self.request.headers['quizid'])[0].user_id
         print(user_data, question_data)
@@ -493,7 +493,7 @@ class ApiSingleQuestionView(ListAPIView):
         try:
             token = self.request.headers['Authorization']
             headers = {'Authorization': token}
-            user_data = requests.get("http://127.0.0.1:8000/authen/users/me/", headers=headers)
+            user_data = requests.get("https://questengine.herokuapp.com/authen/users/me/", headers=headers)
             user_data = user_data.json()["id"]
             question_data = Question.objects.get(pk=pk).user_id
             owner = user_data == int(question_data)
